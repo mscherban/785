@@ -1,5 +1,5 @@
 CVFLAGS=`pkg-config --cflags --libs opencv`
-CFLAGS=-Wall -O1
+CFLAGS=-Wall -O2
 CC=g++
 
 main: main.o
@@ -12,4 +12,4 @@ clean:
 	rm -rf version main *.o
 
 %.o: %.cpp
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(CVFLAGS)
