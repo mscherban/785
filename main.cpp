@@ -105,6 +105,13 @@ int main(int argc, char** argv) {
 		cout << "Error, did not find 2 triangles." << endl;
 	}
 	
+	//get the moments
+	vector<Moments> mo(2);
+	for (unsigned int i = 0; i < 2; i++) {
+		mo[i] = moments(triangles[i], 0);
+	}
+	
+#if 0
 	//get bounding rectangles around the triangles, might be easier to work with
 	vector<Rect> rectangles(2);
 	for (unsigned int i = 0; i < 2; i++) {
@@ -113,13 +120,17 @@ int main(int argc, char** argv) {
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
 		rectangle( frame, rectangles[i].tl(), rectangles[i].br(), color, 2, 8, 0 );
 	}
-	
+#endif
 	/* get the centers */
 	vector<Point> centers(2);
 	for (unsigned int i = 0; i < 2; i++) {
-		centers[i] = (rectangles[i].tl() + rectangles[i].br()) * .5;
+		//centers[i] = (rectangles[i].tl() + rectangles[i].br()) * .5;
+		double CX, CY;
+		CX = mo[i].m10 / mo[i].m00;
+		CY = mo[i].m01 / mo[i].m00;
+		centers[i] = Point((int)CX, (int)CY);
 	}
-	
+
 	//draw a line connecting the 2 rectangles
 	//another lines through the middle of the horizontal and vertical axis
 	line(frame, centers[0], centers[1], Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ));
