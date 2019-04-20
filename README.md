@@ -7,5 +7,5 @@
 ## Binary image containing yellow
 ![image](images/threshold.png)
 
-## Drawing rectangles around the triangles
-![image](images/drawing.png)
+## Drawing rectangles around the triangles, connecting with lines, and drawing lines through horiz/vert axes
+![image](images/capture.png)
