@@ -7,5 +7,7 @@
 ## Binary image containing yellow
 ![image](images/threshold.png)
 
-## Drawing rectangles around the triangles, connecting with lines, and drawing lines through horiz/vert axes
+## Image processing
+Connect the triangles by using the moments to find the center or mass
+Find the midpoint and calculate offset from middle of image
 ![image](images/capture.png)
