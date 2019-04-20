@@ -1,6 +1,7 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 #include <time.h>
+#include <math.h>
 
 using namespace cv;
 using namespace std;
@@ -75,8 +76,6 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
-	
-	
 	//convert to hue/saturation/value
 	cvtColor(frame, hsv, CV_BGR2HSV); 
 	//color pass through, get binary image (black and white)
@@ -116,12 +115,12 @@ int main(int argc, char** argv) {
 	vector<Rect> rectangles(2);
 	for (unsigned int i = 0; i < 2; i++) {
 		rectangles[i] = boundingRect(triangles[i]);
-		
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
 		rectangle( frame, rectangles[i].tl(), rectangles[i].br(), color, 2, 8, 0 );
 	}
 #endif
-	/* get the centers */
+
+	/* get the centers using the moments */
 	vector<Point> centers(2);
 	for (unsigned int i = 0; i < 2; i++) {
 		//centers[i] = (rectangles[i].tl() + rectangles[i].br()) * .5;
@@ -131,11 +130,22 @@ int main(int argc, char** argv) {
 		centers[i] = Point((int)CX, (int)CY);
 	}
 
-	//draw a line connecting the 2 rectangles
+	Point coi((width-1)/2, (height-1)/2);
+	Point cots = (centers[0] + centers[1]) * .5;
+	Point error = cots - coi;
+	int errorpan = error.x;
+	int errortilt = -error.y;
+	printf("error pan: %i, error tilt: %i\n", errorpan, errortilt);
+	string errortext = "pan error: " + to_string(errorpan) + ", tilt error: " + to_string(errortilt);
+	
+	//draw a line connecting the 2 triangles
 	//another lines through the middle of the horizontal and vertical axis
 	line(frame, centers[0], centers[1], Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ));
-	line(frame, Point(0, (height-1)/2), Point(width-1, (height-1)/2), Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ));
-	line(frame, Point((width-1)/2, 0), Point((width-1)/2,height-1), Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ));
+	line(frame, Point(width*.35, (height-1)/2), Point((width-1)*.65, (height-1)/2), Scalar( 0, 0, 255 ));
+	line(frame, Point((width-1)/2, height*.35), Point((width-1)/2,(height-1)*.65), Scalar( 0, 0, 255 ));
+	circle(frame, coi, 10, Scalar( 0, 0, 255 ));
+	circle(frame, cots, 10, Scalar( 0, 255, 0 ));
+	putText(frame, errortext, Point(10, height-10),  FONT_HERSHEY_SIMPLEX, .75, Scalar( 0, 0, 255 ), 2);
 	
 	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &end);
 	imwrite("images/capture.png", frame); // save capture
