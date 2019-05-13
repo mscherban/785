@@ -102,28 +102,19 @@ int main(int argc, char** argv) {
 	
 	if (triangles.size() != 2) {
 		cout << "Error, did not find 2 triangles." << endl;
+		return 1;
 	}
-	
+
 	//get the moments
 	vector<Moments> mo(2);
 	for (unsigned int i = 0; i < 2; i++) {
 		mo[i] = moments(triangles[i], 0);
 	}
 	
-#if 0
-	//get bounding rectangles around the triangles, might be easier to work with
-	vector<Rect> rectangles(2);
-	for (unsigned int i = 0; i < 2; i++) {
-		rectangles[i] = boundingRect(triangles[i]);
-		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		rectangle( frame, rectangles[i].tl(), rectangles[i].br(), color, 2, 8, 0 );
-	}
-#endif
 
 	/* get the centers using the moments */
 	vector<Point> centers(2);
 	for (unsigned int i = 0; i < 2; i++) {
-		//centers[i] = (rectangles[i].tl() + rectangles[i].br()) * .5;
 		double CX, CY;
 		CX = mo[i].m10 / mo[i].m00;
 		CY = mo[i].m01 / mo[i].m00;
@@ -140,10 +131,10 @@ int main(int argc, char** argv) {
 	
 	//draw a line connecting the 2 triangles
 	//another lines through the middle of the horizontal and vertical axis
-	line(frame, centers[0], centers[1], Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ));
 	line(frame, Point(width*.35, (height-1)/2), Point((width-1)*.65, (height-1)/2), Scalar( 0, 0, 255 ));
 	line(frame, Point((width-1)/2, height*.35), Point((width-1)/2,(height-1)*.65), Scalar( 0, 0, 255 ));
 	circle(frame, coi, 10, Scalar( 0, 0, 255 ));
+	line(frame, centers[0], centers[1], Scalar( 0, 255, 0  ));
 	circle(frame, cots, 10, Scalar( 0, 255, 0 ));
 	putText(frame, errortext, Point(10, height-10),  FONT_HERSHEY_SIMPLEX, .75, Scalar( 0, 0, 255 ), 2);
 	
