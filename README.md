@@ -1,4 +1,4 @@
-# 785 OpenCV Project
+# OpenCV Class Project
 Track the position of the midpoint between two yellow triangles relative to the center of the frame. Pan and tilt errors indicate the amount of pixels away from the center.
 
 ## Input image
